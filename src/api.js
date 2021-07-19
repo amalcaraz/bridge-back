@@ -1,15 +1,13 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const appRouter = require('./route/index')
 
-function startApi() {
-  app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
-
-  app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-  })
+function startApi(port = 3000) {
+  app
+    .use(appRouter)
+    .listen(port, () => {
+      console.log(`App listening at http://localhost:${port}`)
+    })
 }
 
 module.exports = {
