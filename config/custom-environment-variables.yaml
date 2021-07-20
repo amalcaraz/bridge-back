@@ -1,0 +1,8 @@
+---
+port: BRIDGE_PORT
+
+db:
+  host: POSTGRES_HOST
+  name: POSTGRES_DB
+  user: POSTGRES_USER
+  pass: POSTGRES_PASSWORD

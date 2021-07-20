@@ -1,5 +1,5 @@
 const { config } = require('dotenv')
-const { startApi } = require('./src/api')
-
 config()
-startApi()
+
+const { start } = require('./src/app')
+start()
