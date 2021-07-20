@@ -8,4 +8,4 @@ RUN npm ci
 COPY . .
 EXPOSE 3000
 
-CMD [ "index.js" ]
+CMD [ "node", "--inspect=0.0.0.0", "index.js"]
