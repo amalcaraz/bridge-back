@@ -1,5 +1,9 @@
+const dbAdapter = require('../utils/db')
+
 async function getManufacturers() {
-  return []
+  return dbAdapter
+    .select('id', 'name', 'cif', 'address')
+    .from('manufacturers')
 }
 
 module.exports = {
