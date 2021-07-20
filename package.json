@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:docker": "docker build -t bridge-back .",
+    "start:docker": "docker run --rm -p 3000:3000 bridge-back",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "up": "docker network create bridge-net; docker-compose up"
   },
   "author": "",
   "license": "ISC",
