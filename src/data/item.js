@@ -3,30 +3,29 @@ const { TableId, calculatePaginationInfo } = require('./common')
 
 async function getItems(
   { q, name, manufacturerName },
-  { orderName, orderRelevance, orderPrice },
+  { orderName, orderRelevance, orderPrice, orderManufacturerName },
   { page = 0, limit = 10 }
 ) {
   // --- Common ---
 
-  const commonQuery = dbAdapter.from(TableId.ITEMS)
+  const commonQuery = dbAdapter
+    .from(TableId.ITEMS)
+    .join(TableId.MANUFACTURERS, `${TableId.ITEMS}.manufacturer`, `${TableId.MANUFACTURERS}.id`)
 
   if (q) {
     const likeStr = `%${q}%`
     commonQuery
-      .join(TableId.MANUFACTURERS, 'items.manufacturer', 'manufacturers.id')
-      .whereRaw('items.name ilike ?', [likeStr])
-      .orWhereRaw('manufacturers.name ilike ?', [likeStr])
+      .whereRaw(`${TableId.ITEMS}.name ilike ?`, [likeStr])
+      .orWhereRaw(`${TableId.MANUFACTURERS}.name ilike ?`, [likeStr])
   } else {
     if (name) {
       const likeStr = `%${name}%`
-      commonQuery.whereRaw('items.name ilike ?', [likeStr])
+      commonQuery.whereRaw(`${TableId.ITEMS}.name ilike ?`, [likeStr])
     }
 
     if (manufacturerName) {
       const likeStr = `%${manufacturerName}%`
-      commonQuery
-        .join(TableId.MANUFACTURERS, 'items.manufacturer', 'manufacturers.id')
-        .whereRaw('manufacturers.name ilike ?', [likeStr])
+      commonQuery.whereRaw(`${TableId.MANUFACTURERS}.name ilike ?`, [likeStr])
     }
   }
 
@@ -34,10 +33,14 @@ async function getItems(
 
   const dataQuery = commonQuery
     .clone()
-    .select('items.id', 'items.name', 'relevance', 'price', 'manufacturer')
+    .select(`${TableId.ITEMS}.id`, `${TableId.ITEMS}.name`, 'relevance', 'price', 'manufacturer', `${TableId.MANUFACTURERS}.name as manufacturerName`)
 
   if (orderName) {
-    dataQuery.orderBy('name', orderName)
+    dataQuery.orderBy(`${TableId.ITEMS}.name`, orderName)
+  }
+
+  if (orderManufacturerName) {
+    dataQuery.orderBy(`${TableId.MANUFACTURERS}.name`, orderManufacturerName)
   }
 
   if (orderRelevance) {

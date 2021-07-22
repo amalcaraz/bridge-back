@@ -3,8 +3,8 @@ const { getItems, getItem } = require('../domain')
 
 async function itemGetAllController(req, res, next) {
   try {
-    const { q, name, manufacturerName, orderName, orderRelevance, orderPrice, page, limit } = req.query
-    const items = await getItems({ q, name, manufacturerName, orderName, orderRelevance, orderPrice, page, limit })
+    const { q, name, manufacturerName, orderName, orderRelevance, orderPrice, orderManufacturerName, page, limit } = req.query
+    const items = await getItems({ q, name, manufacturerName, orderName, orderRelevance, orderPrice, orderManufacturerName, page, limit })
     res.send(items);
   } catch (error) {
     next(error)
