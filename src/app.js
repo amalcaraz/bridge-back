@@ -13,7 +13,7 @@ async function start() {
 
 async function startDb() {
   // TODO: Consider to move this to an external process running knex through CLI 
-  await dbAdapter.migrate.rollback()
+  // await dbAdapter.migrate.rollback()
   await dbAdapter.migrate.latest()
   await dbAdapter.seed.run();
 }
