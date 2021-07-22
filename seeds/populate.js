@@ -1,9 +1,10 @@
+const { TableId } = require('../src/data/common')
 
 exports.seed = async function (knex) {
-  await knex('items').del()
-  await knex('manufacturers').del()
+  await knex(TableId.ITEMS).del()
+  await knex(TableId.MANUFACTURERS).del()
 
-  const manufacturers = await knex('manufacturers')
+  const manufacturers = await knex(TableId.MANUFACTURERS)
     .returning('id')
     .insert([
       { name: 'Le Wagon', cif: 'R0904067F', address: 'Calle del Dr. Esquerdo, 70, 28007 Madrid' },
@@ -16,7 +17,7 @@ exports.seed = async function (knex) {
     ]);
 
   for (let manufacturer of manufacturers) {
-    await knex('items')
+    await knex(TableId.ITEMS)
       .insert([
         { name: 'Full Stack Web Development', relevance: getRandomRelevance(), price: getRandomPrice(), manufacturer },
         { name: 'Cybersecurity', relevance: getRandomRelevance(), price: getRandomPrice(), manufacturer },
@@ -37,5 +38,5 @@ function getRandomPrice() {
 }
 
 function getRandomRelevance() {
-  return Math.ceil(Math.random() * (100))
+  return Math.round(Math.random() * 100)
 }

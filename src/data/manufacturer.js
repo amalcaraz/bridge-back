@@ -1,5 +1,5 @@
 const dbAdapter = require('../utils/db')
-const { calculatePaginationInfo } = require('./common')
+const { TableId, calculatePaginationInfo } = require('./common')
 
 async function getManufacturers(
   { q, name },
@@ -10,7 +10,7 @@ async function getManufacturers(
 
   // --- Common ---
 
-  const commonQuery = dbAdapter.from('manufacturers')
+  const commonQuery = dbAdapter.from(TableId.MANUFACTURERS)
 
   if (q) {
     const likeStr = `%${q}%`
@@ -60,6 +60,17 @@ async function getManufacturers(
   }
 }
 
+
+async function getManufacturer(id) {
+  const [item] = await dbAdapter
+    .select('id', 'name', 'cif', 'address')
+    .from(TableId.MANUFACTURERS)
+    .where('id', id)
+
+  return item
+}
+
 module.exports = {
-  getManufacturers
+  getManufacturers,
+  getManufacturer
 }

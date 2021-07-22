@@ -1,7 +1,9 @@
 const express = require('express')
 const manufacturerRouter = express.Router()
-const manufacturerController = require('../controller/manufacturer')
+const { manufacturerGetAllController, manufacturerGetIdController } = require('../controller/manufacturer')
 
-manufacturerRouter.get('/', manufacturerController)
+manufacturerRouter
+  .get('/', manufacturerGetAllController)
+  .get('/:manufacturerId', manufacturerGetIdController)
 
 module.exports = manufacturerRouter

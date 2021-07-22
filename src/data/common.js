@@ -1,12 +1,19 @@
+const TableId = Object.freeze({
+  ITEMS: 'items',
+  MANUFACTURERS: 'manufacturers',
+})
+
 function calculatePaginationInfo(current, limit, count) {
   current = Number(current)
   limit = Number(limit)
+  count = Number(count)
 
   const last = Math.floor(count / limit)
   const prev = current - 1
   const next = current + 1
 
   const pagination = {
+    count,
     current,
     last,
   }
@@ -23,5 +30,6 @@ function calculatePaginationInfo(current, limit, count) {
 }
 
 module.exports = {
+  TableId,
   calculatePaginationInfo
 }

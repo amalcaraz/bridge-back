@@ -1,3 +1,4 @@
+const { TableId } = require('../src/data/common')
 
 exports.up = async function (knex) {
   await knex.raw('create extension if not exists "uuid-ossp"')
@@ -6,13 +7,13 @@ exports.up = async function (knex) {
 
   const existsManufacturers = await knex.schema
     .withSchema('public')
-    .hasTable('manufacturers')
+    .hasTable(TableId.MANUFACTURERS)
 
   if (existsManufacturers) return
 
   await knex.schema
     .withSchema('public')
-    .createTable('manufacturers', function (t) {
+    .createTable(TableId.MANUFACTURERS, function (t) {
       t.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
       t.increments('num', { primaryKey: false })
       t.string('name', 255).notNullable()
@@ -24,13 +25,13 @@ exports.up = async function (knex) {
 
   const existsItems = await knex.schema
     .withSchema('public')
-    .hasTable('items')
+    .hasTable(TableId.ITEMS)
 
   if (existsItems) return
 
   await knex.schema
     .withSchema('public')
-    .createTable('items', function (t) {
+    .createTable(TableId.ITEMS, function (t) {
       t.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
       t.increments('num', { primaryKey: false })
       t.string('name', 255).notNullable()
@@ -40,15 +41,15 @@ exports.up = async function (knex) {
 
       t.foreign('manufacturer')
         .references('id')
-        .inTable('manufacturers')
+        .inTable(TableId.MANUFACTURERS)
     })
 }
 
 exports.down = async function (knex) {
   await knex.schema
     .withSchema('public')
-    .dropTable('items')
-    .dropTable('manufacturers')
+    .dropTable(TableId.ITEMS)
+    .dropTable(TableId.MANUFACTURERS)
 
   await knex.raw('drop extension if exists "uuid-ossp"')
 }

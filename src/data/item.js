@@ -1,5 +1,5 @@
 const dbAdapter = require('../utils/db')
-const { calculatePaginationInfo } = require('./common')
+const { TableId, calculatePaginationInfo } = require('./common')
 
 async function getItems(
   { q, name, manufacturerName },
@@ -8,12 +8,12 @@ async function getItems(
 ) {
   // --- Common ---
 
-  const commonQuery = dbAdapter.from('items')
+  const commonQuery = dbAdapter.from(TableId.ITEMS)
 
   if (q) {
     const likeStr = `%${q}%`
     commonQuery
-      .join('manufacturers', 'items.manufacturer', 'manufacturers.id')
+      .join(TableId.MANUFACTURERS, 'items.manufacturer', 'manufacturers.id')
       .whereRaw('items.name ilike ?', [likeStr])
       .orWhereRaw('manufacturers.name ilike ?', [likeStr])
   } else {
@@ -25,7 +25,7 @@ async function getItems(
     if (manufacturerName) {
       const likeStr = `%${manufacturerName}%`
       commonQuery
-        .join('manufacturers', 'items.manufacturer', 'manufacturers.id')
+        .join(TableId.MANUFACTURERS, 'items.manufacturer', 'manufacturers.id')
         .whereRaw('manufacturers.name ilike ?', [likeStr])
     }
   }
@@ -73,6 +73,16 @@ async function getItems(
   }
 }
 
+async function getItem(id) {
+  const [item] = await dbAdapter
+    .select('id', 'name', 'relevance', 'price', 'manufacturer')
+    .from(TableId.ITEMS)
+    .where('id', id)
+
+  return item
+}
+
 module.exports = {
-  getItems
+  getItems,
+  getItem
 }
