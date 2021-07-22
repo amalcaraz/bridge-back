@@ -1,9 +1,7 @@
-function errorController(req, res, next) {
-  console.warn('👀  Not found: ', req.path)
+const { notFoundError } = require('../utils/error')
 
-  res
-    .status(404)
-    .json({ error: '404 Not Found' });
+function errorController(req, res, next) {
+  next(notFoundError)
 }
 
 module.exports = errorController

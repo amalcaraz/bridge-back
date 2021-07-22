@@ -1,8 +1,16 @@
+const { ApiError, internalError } = require('../utils/error')
+
 function errorController(error, req, res, next) {
-  console.error('🅾️  Error: ', error.message)
+  if (error.status = 404) {
+    console.warn('👀  Not found: ', req.path)
+  } else {
+    console.error('🅾️  Error: ', error)
+  }
+
+  error = error instanceof ApiError ? error : internalError
 
   res
-    .status(500)
+    .status(error.status)
     .json({ error: error.message });
 }
 
